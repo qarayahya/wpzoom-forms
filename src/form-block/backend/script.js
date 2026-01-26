@@ -14,7 +14,8 @@ import {
 	Placeholder, 
 	Button, 
 	SelectControl, 
-	RangeControl, 
+	RangeControl,
+	ComboboxControl,
 	__experimentalHStack as HStack 
 } from '@wordpress/components';
 
@@ -22,8 +23,6 @@ import { useSelect } from '@wordpress/data';
 import { Fragment, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import ServerSideRender from '@wordpress/server-side-render';
-
-import SearchableSelectControl from './searchable-select';
 
 const wpzoomFormsIcon = (
 <svg width="40" height="40" viewBox="0 0 250 300" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,14 +74,14 @@ registerBlockType( 'wpzoom-forms/form-block', {
 		}, [ forms, _formId, setAttributes ] );
 
 		const formSelect = (
-			<SearchableSelectControl
+			<ComboboxControl
 				label={ __( 'Form', 'wpzoom-forms' ) }
-				selectPlaceholder={ forms.length < 1 ? __( 'No forms exist...', 'wpzoom-forms' ) : __( 'Select a form...', 'wpzoom-forms' ) }
-				searchPlaceholder={ __( 'Search...', 'wpzoom-forms' ) }
-				noResultsLabel={ __( 'Nothing found...', 'wpzoom-forms' ) }
-				options={ forms }
-				value={ typeof theForm !== 'undefined' ? theForm : '' }
-				onChange={ ( value ) => setAttributes( { formId: String( value.selectedItem.key ) } ) }
+				placeholder={ forms.length < 1 ? __( 'No forms exist...', 'wpzoom-forms' ) : __( 'Select a form...', 'wpzoom-forms' ) }
+				options={ forms.map( form => ({ label: form.name, value: form.key }) ) }
+				value={ typeof theForm !== 'undefined' ? theForm.key : '' }
+				onChange={ ( value ) => setAttributes( { formId: String( value ) } ) }
+				allowReset={ false }
+				__next40pxDefaultSize
 			/>
 		);
 
